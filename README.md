@@ -30,6 +30,11 @@ Optional Arguments:
 - `-d DATASET, --dataset DATASET`: Choose the dataset to use. Options are `FUNSD`, `SROIE`, `Wildreceipt` or `CORD`.
 - `-t TRAIN, --train TRAIN`: Boolean to choose between the train or test dataset.
 
+Example:
+
+```shell
+$ python graph_builder.py -d FUNSD -t True
+```
 ### Training Command
 
 To train the model, use the following command:
@@ -47,6 +52,12 @@ Arguments:
 - `-hl HIDDEN_LAYERS, --hidden_layers HIDDEN_LAYERS`: Number of GCN hidden layers.
 - `-lr LEARNING_RATE, --learning_rate LEARNING_RATE`: The learning rate.
 - `-e EPOCHS, --epochs EPOCHS`: The number of epochs.
+
+Example:
+
+```shell
+$ python train.py -d FUNSD -p data/ -hs 16 -hl 10 -lr 0.01 -e 50
+```
 
 ## Acknowledgments
 We acknowledge the contributions of the authors of the paper and the developers of the libraries used in this project.
