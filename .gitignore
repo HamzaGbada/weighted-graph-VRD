@@ -1,0 +1,6 @@
+.idea
+/data/
+/venv/
+/src/utils/file.log
+/models/tokenizers/
+/notebooks/
