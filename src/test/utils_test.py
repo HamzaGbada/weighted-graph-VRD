@@ -25,16 +25,8 @@ class TestUtils(unittest.TestCase):
     def test_edge_metric(self):
         doc_index = 0
         train_set = FUNSD(train=False, download=True)
-        # TODO: Bug found is in embedded dataset calculation or edge array
         embedded_dataset = feature_embedding(train_set)
-        # node_feature = embedded_dataset[doc_index]["boxes_features"]
-        # edge_array = edge_builder(embedded_dataset)
-        # logger.debug(f"edge array: {edge_array[doc_index]}")
-        # logger.debug(f"the len of edge array (first one): {len(edge_array[doc_index])}")
-        # logger.debug(f"the size of edge array (should be equal to nbr of doc): {len(edge_array)}")
-        # data_per_doc = train_set.data[doc_index]
-        # edge_metric_dict = edge_metric_calculation(edge_array[doc_index], node_feature, data_per_doc)
-        # logger.debug(f"the edge_metric_dict: \n {edge_metric_dict}")
+
 
 
 if __name__ == '__main__':

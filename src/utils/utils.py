@@ -30,7 +30,6 @@ def funsd_to_CSV():
     for k in range(len(train_set.data)):
         data_links = {}
 
-        # This for loop return a dict contains the links between each bbox with uniqueness (No redundancy)
         for links in train_set.data[k][1]['links']:
             if links:
                 s = set()
@@ -208,28 +207,19 @@ kth Document ->{
     else:
         logger.error(f"dataset is unkown!")
         return
-    # logger.debug(f"word embedding output {word_embeder}")
     word_embeder = Doc2VecEncoder(dataloader_set=dataloader_set, out_dim=out_dim)
-    # logger.debug(f"dataset len {len(dataloader_set)}")
     nbr_document = len(dataloader_set)
 
-    # logger.debug(f"the unique label list : \n {set(labels_list)}")
-    # logger.debug(f"the number of the unique label list : \n {len(set(labels_list))}")
-    # logger.debug(f"the labels of the dtataset \n {labels_list}")
-    # logger.debug(f"the encoded label list : \n {label_encoded_list}")
 
     data_encoded = []
     # TODO: Try to save the data encoded to npz files
     for doc_index in range(nbr_document):
         logger.debug(f"the docuemnt number processing now {doc_index}")
 
-        # logger.debug(f"document name {dataloader_set.data[doc_index][0]}")
         bbox = dataloader_set.data[doc_index][1]['boxes']
 
         image_name = dataloader_set.data[doc_index][0]
-        # logger.debug(f"The current image name  {path + image_name}")
         image = Image.open(path + image_name)
-        # convert image to numpy array
         image = np.asarray(image)
         if len(image.shape) == 2:
             image = image.reshape((image.shape[0], image.shape[1], 1))
@@ -237,12 +227,7 @@ kth Document ->{
         spatial_embedding = SpatialEmbedding(bbox=bbox, document=image)
         label_encoded_list = [encoded_dic[dataloader_set.data[doc_index][1]['labels'][bb_i][1]] for bb_i in
                               range(len(dataloader_set.data[doc_index][1]['boxes']))]
-        # logger.debug(f"spatial embedding size: {len(spatial_embedding.embedding)}")
-        # logger.debug(f"number of bbox: {spatial_embedding[2]}")
         document_feat = {}
-        # logger.debug(f"the unique encoded label list : \n {np.unique(label_encoded_list)}")
-        # logger.debug(f"the labels of the dtataset \n {labels_list}")
-        # logger.debug(f"the encoded label list : \n {label_encoded_list}")
         features = []
 
         for bbox_index in range(len(bbox)):
@@ -252,21 +237,9 @@ kth Document ->{
             word_embedding, _ = word_embeder[title[0]]
             # embedding.append(word_embedding)
             image_encoder = SimpleCNNEncoder(in_channel=nbr_of_channel, out_dim=out_dim)
-            # logger.debug(f"data type: {type(data)}")
             xmin, ymin, xmax, ymax = bbox[bbox_index]
-            # logger.debug(f"The image name {dataloader_set.data[index][0]}")
-            # logger.debug(f"the bbox: {bbox[index]}")
-            # logger.debug(f"the label: {title}")
-            # logger.debug(f"the xmin: {xmin}")
-            # logger.debug(f"the ymin: {ymin}")
-            # logger.debug(f"the xmax: {xmax}")
-            # logger.debug(f"the ymax: {ymax}")
-            # logger.debug(f"the image shape {len(image.shape)}")
-            # logger.debug(f"the data shape : {swapaxes(from_numpy(image[ymin:ymax, xmin:xmax]), 0, 2).shape}")
             data = swapaxes(swapaxes(from_numpy(image[ymin:ymax, xmin:xmax]), 0, 2), 1, 2).float()
             data = data.reshape((batch_size,) + data.shape)
-            # logger.debug(f"the data shape : {data.shape}")
-            # logger.debug(f"the data size (number of element) : {numel(data)}")
 
             if numel(data) < out_dim:
                 added_dim = out_dim - numel(data)
@@ -274,18 +247,11 @@ kth Document ->{
                 encoded_data = pad(encoded_data, (0, added_dim), "constant", 0)
             else:
                 encoded_data = flatten(image_encoder(data))
-            # logger.debug(
-            #     f"Encoded data : \n {flatten(encoded_data)} and it's related Shape \n {flatten(encoded_data).shape}")
             # embedding.append(encoded_data)
             embedding_tensor = stack((spatial_embedding[bbox_index], encoded_data, word_embedding))
             features.append(embedding_tensor)
-        # logger.debug(f"the feature size before convert ot tensor: {len(features)}")
-        # logger.debug(f"the feature size before convert ot tensor: {stack(features, dim=1).shape}")
-        # logger.debug(f"the label list: {label_encoded_list}")
         document_feat["boxes_features"] = stack(features)
         document_feat["labels_encoded"] = tensor(label_encoded_list, dtype=int16)
-        # logger.debug(f"the number of bbox after embedding {len(document_feat['boxes_features'])}")
-        # logger.debug(f"the number of labels after embedding {len(document_feat['labels_encoded'])}")
         data_encoded.append(document_feat)
 
     return data_encoded
@@ -390,38 +356,22 @@ def edge_metric_calculation(edge_array, node_feature, doc_shape):
         # Textual Metrics
         cosine_similarity_norm = cosine(node_src_text, node_dst_text) / 2.0
 
-        # logger.debug(f"Type of euclidean_dist: \n {type(euclidean_dist)}")
-        # logger.debug(f"Type of chebyshev_dist: \n {type(chebyshev_dist)}")
-        # logger.debug(f"Type of manhattan_dist: \n {type(manhattan_dist)}")
-        # logger.debug(f"Type of MI: \n {type(MI)}")
-        # logger.debug(f"Type of correlation_coef: \n {type(correlation_coef)}")
-        # logger.debug(f"Type of KL: \n {type(KL)}")
-        # logger.debug(f"Type of cosine_similarity: \n {type(cosine_similarity)}")
-
         # TODO: this metric is very relative you can choose another strategy (may be based on weights)
 
         metric = ((
                               1 - euclidean_dist_norm) + chebyshev_dist_norm + manhattan_dist_norm + MI_norm + correlation_coef + cosine_similarity_norm) / 6
 
-        logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-        logger.debug(f"The metric is : {metric}")
-        logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
         edge_metric_dict[(edge_link[0], edge_link[1])] = metric
     top_dict = {}
     for node_index in range(len(node_feature)):
         node_index_dict = {}
         key_list = list(edge_metric_dict)
         for key in key_list:
-            logger.debug(f"The key is {key}")
-            logger.debug(f"The node_index is {node_index}")
             if node_index in key:
                 key_list.remove(key)
                 node_index_dict[key] = edge_metric_dict[key]
         # Sorting the dict by value
         sorted_dict = dict(sorted(node_index_dict.items(), key=lambda item: item[1]))
-        logger.debug("*********************************************************************************************")
-        logger.debug(f"the size of top dict {len(sorted_dict)}")
-        logger.debug(f"the top dict {sorted_dict}")
         # TODO: The max number of nodes is 4
         max_nodes = 4
 
@@ -430,7 +380,4 @@ def edge_metric_calculation(edge_array, node_feature, doc_shape):
                 top_dict[i] = sorted_dict[i]
         else:
             top_dict = sorted_dict
-    logger.debug("####################################################################")
-    logger.debug(f"the size of top dict {len(top_dict)}")
-    logger.debug(f"the top dict {top_dict}")
     return top_dict

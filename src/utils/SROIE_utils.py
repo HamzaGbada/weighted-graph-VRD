@@ -20,8 +20,6 @@ def read_bbox_and_words(path: Path):
             bbox = np.array(split_lines[0:8], dtype=np.int32)
             text = ",".join(split_lines[8:])
 
-            # From the splited line we save (filename, [bounding box points], text line).
-            # The filename will be useful in the future
             bbox_and_words_list.append([path.stem, *bbox, text])
 
     dataframe = pd.DataFrame(bbox_and_words_list,
@@ -40,7 +38,6 @@ def read_entities(path: Path):
     return dataframe
 
 
-# Assign a label to the line by checking the similarity of the line and all the entities
 def assign_line_label(line: str, entities: pd.DataFrame):
     line_set = line.replace(",", "").strip().split()
     for i, column in enumerate(entities):
@@ -69,7 +66,6 @@ def assign_labels(words: pd.DataFrame, entities: pd.DataFrame):
                        "O": False
                        }
 
-    # Go through every line in $words and assign it a label
     labels = []
     for i, line in enumerate(words['line']):
         label = assign_line_label(line, entities)
@@ -118,8 +114,6 @@ if __name__ == "__main__":
         entities = read_entities(path=Path(entities_file_path))
 
         bbox_labeled = assign_labels(bbox, entities)
-        # indexAge = bbox_labeled[bbox_labeled['label'] == 'O'].index
-        # bbox_labeled.drop(indexAge, inplace=True)
         if not os.path.isdir("../../data/SROIE_CSV/train/"):
             os.makedirs("../../data/SROIE_CSV/train/")
         bbox_labeled.to_csv("../../data/SROIE_CSV/train/"+filename[:-4]+".csv")
