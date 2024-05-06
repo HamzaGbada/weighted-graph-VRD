@@ -27,7 +27,7 @@ $ python graph_builder.py -h
 This command creates a graph-based dataset for node classification for a specific dataset to extract entities from Visually Rich Documents.
 
 Optional Arguments:
-- `-d DATASET, --dataset DATASET`: Choose the dataset to use. Options are "FUNSD" or "CORD".
+- `-d DATASET, --dataset DATASET`: Choose the dataset to use. Options are `FUNSD`, `SROIE` or `CORD`.
 - `-t TRAIN, --train TRAIN`: Boolean to choose between the train or test dataset.
 
 ### Training Command
@@ -41,7 +41,7 @@ $ python train.py -h
 This command trains the model on a selected dataset for node classification.
 
 Arguments:
-- `-d DATANAME, --dataname DATANAME`: Select the dataset for model training. Options are "FUNSD", "SROIE", or "CORD".
+- `-d DATANAME, --dataname DATANAME`: Select the dataset for model training. Options are `FUNSD`, `SROIE`, or `CORD`.
 - `-p PATH, --path PATH`: Select the dataset path for model training.
 - `-hs HIDDEN_SIZE, --hidden_size HIDDEN_SIZE`: GCN hidden size.
 - `-hl HIDDEN_LAYERS, --hidden_layers HIDDEN_LAYERS`: Number of GCN hidden layers.
