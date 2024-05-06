@@ -83,10 +83,6 @@ class SAGE(Module):
     def __init__(self, in_size, hid_size, out_size):
         super().__init__()
         self.layers = ModuleList()
-        # three-layer GraphSAGE-mean
-        # self.layers.append(SAGEConv(in_size, hid_size, 'mean'))
-        # self.layers.append(SAGEConv(hid_size, hid_size, 'mean'))
-        # self.layers.append(SAGEConv(hid_size, out_size, 'mean'))
         self.layer1 = SAGEConv(in_size, hid_size, 'mean')
         self.layer2 = SAGEConv(hid_size, hid_size, 'mean')
         self.layer3 = SAGEConv(hid_size, out_size, 'mean')
@@ -102,11 +98,6 @@ class SAGE(Module):
         h = relu(h)
         h = self.dropout(h)
 
-        # for l, (layer, block) in enumerate(zip(self.layers, blocks)):
-        #     h = layer(block, h)
-        #     if l != len(self.layers) - 1:
-        #         h = relu(h)
-        #         h = self.dropout(h)
         return h
 
     def inference(self, g, device, batch_size):

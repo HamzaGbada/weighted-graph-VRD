@@ -127,8 +127,6 @@ if __name__ == "__main__":
         entities = read_entities(path=Path(entities_file_path))
 
         bbox_labeled = assign_labels(bbox, entities)
-        # indexAge = bbox_labeled[bbox_labeled['label'] == 'O'].index
-        # bbox_labeled.drop(indexAge, inplace=True)
         if not os.path.isdir("../../data/SROIE_CSV/test/"):
             os.makedirs("../../data/SROIE_CSV/test/")
         bbox_labeled.to_csv("../../data/SROIE_CSV/test/"+filename[:-4]+".csv")

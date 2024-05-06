@@ -9,7 +9,6 @@ from src.utils.setup_logger import logger
 
 class DocumentGraphDataset(DGLDataset):
     def __init__(self, data_name: str, path: str):
-        # TODO: setup the number of classes per each dataset
         if data_name == "FUNSD":
             logger.debug(f"the dataset name {data_name}")
             path_test = path+'FUNSD/test/'
@@ -46,14 +45,10 @@ class DocumentGraphDataset(DGLDataset):
 
     def process(self):
 
-        # TODO: assign masks indicating whether a node belongs to training, validation, and test set.
         #
         n_nodes = self.graph_train.number_of_nodes()
-        # TODO: change it to train mask and val mask
         n_train = int(n_nodes * 0.6)
         n_val = int(n_nodes * 0.2)
-        # train_index = arange(n_train)
-        # val_index = arange(n_train, n_nodes)
 
         train_mask = zeros(n_nodes, dtype=bool)
         val_mask = zeros(n_nodes, dtype=bool)

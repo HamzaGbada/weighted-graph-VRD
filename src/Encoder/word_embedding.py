@@ -8,11 +8,6 @@ from torch import from_numpy
 nltk.download('punkt')
 
 
-# TODO: - add another embedding approaches
-#       - apply other processing approaches
-#       - add more params to the embedding model
-#       - Check the word embedder of the transformer in PICK
-#       - try to split the text before applying the embedding to get the same key as the train
 class Doc2VecEncoder:
 
     def __init__(self, dataloader_set, out_dim: int) -> None:
@@ -22,7 +17,6 @@ class Doc2VecEncoder:
         tokenizer = RegexpTokenizer(r'\w+')
         documents = [TaggedDocument(doc, [i]) for i, doc in enumerate(text_units)]
         model = Doc2Vec(documents, vector_size=out_dim, window=2, min_count=1)
-        # logger.debug(f"The New Vec: {len(new_vec)}")
 
         self.model = model
 

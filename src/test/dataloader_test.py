@@ -15,15 +15,8 @@ from src.DataLoader.cord_dataloader import CORD
 class TestFunsdDataLoader(unittest.TestCase):
     def test_json_linking(self):
         train_set = CORD(train=True, download=True)
-        # logger.debug(train_set.data[0][1]['labels'])
         logger.debug(train_set[0])
         logger.debug(train_set.data[0])
-        # logger.debug(train_set.data[0][1]['boxes'])
-        # i = train_set.data[0][1]['links'][0][0][0]
-        # j = train_set.data[0][1]['links'][0][0][1]
-        # logger.debug(i)
-        # logger.debug(j)
-        # logger.debug(train_set.data[0][1]['labels'][i] + " " + train_set.data[0][1]['labels'][j])
         self.assertEqual(train_set.data[0][0], "0060036622.png")
 
 
@@ -49,15 +42,6 @@ class TestCordDataLoader(unittest.TestCase):
         plt.title(title)
         plt.show()
 
-        # logger.debug(f"The size of the labels: \n{len(train_set.data[0][1]['labels'])}")
-        # logger.debug(f"The size of the boxes: \n{len(train_set.data[0][1]['boxes'])}")
-        # logger.debug(f"The size text_unit_list for all dataset: {len(train_set.text_units)}")
-        # logger.debug(f"text_unit_list for all dataset: {train_set.text_units}")
-        # logger.debug(f"Dataloader Type: {type(train_set)}")
-        # j = 0
-        # for i in train_set.data:
-        #     j += 1
-        # logger.debug(f"The size for all dataset: {j}")
         self.assertEqual(train_set.data[0][0], "receipt_00425.png")
 
 
@@ -72,13 +56,6 @@ class TestSROIEDataLoader(unittest.TestCase):
         # logger.debug(f"The bbox in the first doc Dataset: \n{train_set[55]}")
         plt.imshow(train_set[0][0].permute(1, 2, 0))
         plt.show()
-        # logger.debug(f"The size text_unit_list for all dataset: {len(train_set.text_units)}")
-        # logger.debug(f"text_unit_list for all dataset: {train_set.text_units}")
-        # j = 0
-        # for i in train_set.data:
-        #     j+=1
-        # logger.debug(f"The size for all dataset: {j}")
-        # self.assertEqual(train_set.data[0][0], "receipt_00425.png")
 
 
 if __name__ == '__main__':

@@ -16,8 +16,6 @@ class SpatialEmbedding:
             ]
     """
 
-    # TODO: More check what are the feature to add to spatial feature
-
     def __init__(self, bbox: np.ndarray, document: np.ndarray) -> None:
         super().__init__()
         img_c = (document.shape[0] // 2, document.shape[1] // 2)
