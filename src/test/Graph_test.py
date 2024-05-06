@@ -20,20 +20,28 @@ class TestGraph(unittest.TestCase):
         G_list = GraphConstructor(train_set).graph_set
         logger.debug(f"the nbr of graphs initial: {len(G_list)}")
         logger.debug(f"nbr of document: {len(train_set.data)}")
-        logger.debug(f"nbr of node in the first document: {G_list[0].number_of_nodes()}")
-        logger.debug(f"The number of bbox in the first document: {train_set.data[0][1]['boxes'].shape}")
+        logger.debug(
+            f"nbr of node in the first document: {G_list[0].number_of_nodes()}"
+        )
+        logger.debug(
+            f"The number of bbox in the first document: {train_set.data[0][1]['boxes'].shape}"
+        )
         G = to_networkx(G_list[0])
         nx.draw(G)
         plt.show()
 
     def test_graph_load(self):
-        path_test = '../../data/FUNSD/test/'
-        path_train = '../../data/FUNSD/train/'
+        path_test = "../../data/FUNSD/test/"
+        path_train = "../../data/FUNSD/train/"
 
-        ext = 'bin'
+        ext = "bin"
 
-        graph_list = [load_graphs(path_test+files)[0][0] for files in os.listdir(path_test) if files.endswith(ext)]
-        len_glist = [x.ndata['label'].shape[0] for x in graph_list]
+        graph_list = [
+            load_graphs(path_test + files)[0][0]
+            for files in os.listdir(path_test)
+            if files.endswith(ext)
+        ]
+        len_glist = [x.ndata["label"].shape[0] for x in graph_list]
         nbr_nodes = [x.number_of_nodes() for x in graph_list]
         batched = batch(graph_list)
         logger.debug(f"number of node after {batched.number_of_nodes()}")
@@ -48,9 +56,9 @@ class TestGraph(unittest.TestCase):
         test_mask = zeros(n_nodes, dtype=bool)
         train_mask[:n_train] = True
         val_mask[n_train:] = True
-        graph.ndata['train_mask'] = train_mask
-        graph.ndata['val_mask'] = val_mask
-        graph.ndata['test_mask'] = test_mask
+        graph.ndata["train_mask"] = train_mask
+        graph.ndata["val_mask"] = val_mask
+        graph.ndata["test_mask"] = test_mask
         logger.debug(f"train_mask {train_mask}")
         logger.debug(f"val_mask {val_mask}")
         logger.debug(f"test_mask {test_mask}")
@@ -67,5 +75,3 @@ class TestGraph(unittest.TestCase):
         G = to_networkx(graph_test)
         nx.draw(G)
         plt.show()
-
-

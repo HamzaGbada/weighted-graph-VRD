@@ -19,7 +19,7 @@ from doctr.datasets.datasets.pytorch import VisionDataset
 from doctr.datasets.utils import convert_target_to_relative
 from src.utils.setup_logger import logger
 
-__all__ = ['FUNSD']
+__all__ = ["FUNSD"]
 
 
 class FUNSD(VisionDataset):
@@ -39,47 +39,58 @@ class FUNSD(VisionDataset):
         **kwargs: keyword arguments from `VisionDataset`.
     """
 
-    URL = 'https://guillaumejaume.github.io/FUNSD/dataset.zip'
-    SHA256 = 'c31735649e4f441bcbb4fd0f379574f7520b42286e80b01d80b445649d54761f'
-    FILE_NAME = 'funsd.zip'
+    URL = "https://guillaumejaume.github.io/FUNSD/dataset.zip"
+    SHA256 = "c31735649e4f441bcbb4fd0f379574f7520b42286e80b01d80b445649d54761f"
+    FILE_NAME = "funsd.zip"
 
     def __init__(
-            self,
-            train: bool = True,
-            use_polygons: bool = False,
-            **kwargs: Any,
+        self,
+        train: bool = True,
+        use_polygons: bool = False,
+        **kwargs: Any,
     ) -> None:
-
         super().__init__(
             self.URL,
             self.FILE_NAME,
             self.SHA256,
             True,
             pre_transforms=convert_target_to_relative,
-            **kwargs
+            **kwargs,
         )
         self.train = train
         np_dtype = np.float32
 
         # Use the subset
-        subfolder = os.path.join('dataset', 'training_data' if train else 'testing_data')
+        subfolder = os.path.join(
+            "dataset", "training_data" if train else "testing_data"
+        )
 
         # # List images
-        tmp_root = os.path.join(self.root, subfolder, 'images')
+        tmp_root = os.path.join(self.root, subfolder, "images")
 
         self.data: List[Tuple[str, Dict[str, Any]]] = []
         for img_path in os.listdir(tmp_root):
             # File existence check
             if not os.path.exists(os.path.join(tmp_root, img_path)):
-                raise FileNotFoundError(f"unable to locate {os.path.join(tmp_root, img_path)}")
+                raise FileNotFoundError(
+                    f"unable to locate {os.path.join(tmp_root, img_path)}"
+                )
 
             stem = Path(img_path).stem
-            with open(os.path.join(self.root, subfolder, 'annotations', f"{stem}.json"), 'rb') as f:
+            with open(
+                os.path.join(self.root, subfolder, "annotations", f"{stem}.json"), "rb"
+            ) as f:
                 data = json.load(f)
-            _targets = [((block['text'].lower(), block['label']), block['box'], block['linking']) for block in
-                        data['form']]
+            _targets = [
+                (
+                    (block["text"].lower(), block["label"]),
+                    block["box"],
+                    block["linking"],
+                )
+                for block in data["form"]
+            ]
             # TODO: Remove redundancy of text unit
-            text_units = [block['text'].lower() for block in data['form']]
+            text_units = [block["text"].lower() for block in data["form"]]
 
             # for each img_path,
             # data is the data of that image
@@ -95,14 +106,21 @@ class FUNSD(VisionDataset):
                         [box[2], box[1]],
                         [box[2], box[3]],
                         [box[0], box[3]],
-                    ] for box in box_targets
+                    ]
+                    for box in box_targets
                 ]
 
-            self.data.append((
-                img_path,
-                dict(boxes=np.asarray(box_targets, dtype=int), links=list(links), labels=list(text_targets),
-                     text_units=text_units),
-            ))
+            self.data.append(
+                (
+                    img_path,
+                    dict(
+                        boxes=np.asarray(box_targets, dtype=int),
+                        links=list(links),
+                        labels=list(text_targets),
+                        text_units=text_units,
+                    ),
+                )
+            )
         self.root = tmp_root
 
     def extra_repr(self) -> str:

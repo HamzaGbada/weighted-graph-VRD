@@ -10,7 +10,6 @@ from src.GraphModule.GraphConstructor import GraphConstructor
 from src.utils.setup_logger import logger
 
 if __name__ == "__main__":
-
     # dataset_dict = {
     #     "FUNSD": FUNSD(train=argument.train, download=True),
     #     "CORD": CORD(train=argument.train, download=True)
@@ -37,7 +36,9 @@ if __name__ == "__main__":
     logger.debug(f"the nbr of graphs initial: {len(G_list)}")
     logger.debug(f"nbr of document: {len(train_set.data)}")
     logger.debug(f"nbr of node in the first document: {G_list[0].number_of_nodes()}")
-    logger.debug(f"The number of bbox in the first document: {train_set.data[0][1]['boxes'].shape}")
+    logger.debug(
+        f"The number of bbox in the first document: {train_set.data[0][1]['boxes'].shape}"
+    )
     # the nbr of edge = 37 * 38 / 2 (check the adjancy matrix tho see why)
     # G = to_networkx(G_list[0])
     # nx.draw(G)

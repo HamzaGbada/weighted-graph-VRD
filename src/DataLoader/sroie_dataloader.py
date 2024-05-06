@@ -7,7 +7,7 @@ from doctr.datasets.datasets.pytorch import VisionDataset
 
 from src.utils.SROIE_utils import read_bbox_and_words, read_entities, assign_labels
 
-__all__ = ['SROIE']
+__all__ = ["SROIE"]
 
 
 class SROIE(VisionDataset):
@@ -28,13 +28,12 @@ class SROIE(VisionDataset):
     """
 
     def __init__(
-            self,
-            train: bool = True,
-            img_transforms: Optional[Callable[[Any], Any]] = None,
-            sample_transforms: Optional[Callable[[Any, Any], Tuple[Any, Any]]] = None,
-            pre_transforms: Optional[Callable[[Any, Any], Tuple[Any, Any]]] = None,
+        self,
+        train: bool = True,
+        img_transforms: Optional[Callable[[Any], Any]] = None,
+        sample_transforms: Optional[Callable[[Any, Any], Tuple[Any, Any]]] = None,
+        pre_transforms: Optional[Callable[[Any, Any], Tuple[Any, Any]]] = None,
     ) -> None:
-
         self.train = train
         self.img_transforms = img_transforms
         self.sample_transforms = sample_transforms
@@ -42,9 +41,9 @@ class SROIE(VisionDataset):
 
         self.data: List[Tuple[str, Dict[str, Any]]] = []
 
-        if not os.path.isdir('data/SROIE_CSV/'):
-            train_path = 'data/SROIE2019/train/'
-            test_path = 'data/SROIE2019/test/'
+        if not os.path.isdir("data/SROIE_CSV/"):
+            train_path = "data/SROIE2019/train/"
+            test_path = "data/SROIE2019/test/"
 
             bbox_train_path = train_path + "box/"
             entities_train_path = train_path + "entities/"
@@ -82,18 +81,20 @@ class SROIE(VisionDataset):
                 bbox_labeled.to_csv("data/SROIE_CSV/test/" + filename[:-4] + ".csv")
 
         if self.train:
-            path = 'data/SROIE_CSV/train/'
-            img_path = 'data/SROIE2019/train/img/'
+            path = "data/SROIE_CSV/train/"
+            img_path = "data/SROIE2019/train/img/"
         else:
-            path = 'data/SROIE_CSV/test/'
-            img_path = 'data/SROIE2019/test/img/'
+            path = "data/SROIE_CSV/test/"
+            img_path = "data/SROIE2019/test/img/"
         self.data_update = []
         for csv_file in os.listdir(path):
             bbox_and_label = {}
             df = pd.read_csv(path + csv_file)
             bbox_array = df[["x0", "y0", "x2", "y2"]].to_numpy()
-            bbox_and_label['boxes'] = bbox_array
-            bbox_and_label['labels'] = [tuple(x) for x in df[["line", "label"]].to_numpy()]
+            bbox_and_label["boxes"] = bbox_array
+            bbox_and_label["labels"] = [
+                tuple(x) for x in df[["line", "label"]].to_numpy()
+            ]
             t_data = (csv_file[:-4] + ".jpg", bbox_and_label)
 
             self.data.append(t_data)

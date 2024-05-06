@@ -1,13 +1,18 @@
 import unittest
 
 from src.DataLoader.funsd_dataloader import FUNSD
-from src.utils.utils import funsd_to_CSV, cord_to_CSV, sroie_to_CSV, feature_embedding, edge_metric_calculation, \
-    edge_builder
+from src.utils.utils import (
+    funsd_to_CSV,
+    cord_to_CSV,
+    sroie_to_CSV,
+    feature_embedding,
+    edge_metric_calculation,
+    edge_builder,
+)
 from src.utils.setup_logger import logger
 
 
 class TestUtils(unittest.TestCase):
-
     def test_funsd_to_csv(self):
         funsd_to_CSV()
 
@@ -20,7 +25,9 @@ class TestUtils(unittest.TestCase):
     def test_graph_to_csv(self):
         train_set = FUNSD(train=False, download=True)
         logger.debug(f"the whole dataset length: \n {len(train_set.data)}")
-        logger.debug(f"the whole embedded dataset length: \n {len(feature_embedding(train_set))}")
+        logger.debug(
+            f"the whole embedded dataset length: \n {len(feature_embedding(train_set))}"
+        )
 
     def test_edge_metric(self):
         doc_index = 0
@@ -28,6 +35,5 @@ class TestUtils(unittest.TestCase):
         embedded_dataset = feature_embedding(train_set)
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
